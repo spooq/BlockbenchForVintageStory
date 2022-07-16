@@ -1,5 +1,5 @@
 (function () {
-    let exportVsActionLegacy;
+    let exportVsAction;
     let importVsAction;
 
     Plugin.register('vintagestory_models', {
@@ -10,7 +10,7 @@
         version: '1.0.0',
         variant: "both",
         onload() {
-            exportVsActionLegacy = new Action("exportVsModel", {
+            exportVsAction = new Action("exportVsModel", {
                 name: "Export Vintage Story Model",
                 icon: "park",
                 click: function () {
@@ -161,6 +161,7 @@
                             } else if (animation.loop === "once") {
                                 anim.onAnimationEnd = "Stop"
                             }
+
                             animators.forEach(animator => {
                                 // keyframes
                                 //gather
@@ -175,13 +176,6 @@
                                             //target kf
                                             const findingKF = animator[channel].find(kf => getRangeBool(kf.time, timeIndex - .02, timeIndex + .02));
                                             if (findingKF !== undefined) {
-                                                //This clone isn't necessary, the rotation is already correct
-                                                // let KFclone = new Keyframe(findingKF);
-                                                // if (findingKF.channel == "rotation") {
-                                                //     KFclone.data_points[0].x = findingKF.data_points[0].x;
-                                                //     KFclone.data_points[0].y = findingKF.data_points[0].y;
-                                                //     KFclone.data_points[0].z = findingKF.data_points[0].z;
-                                                // }
                                                 const tIndex = newKfs.findIndex(e => e.find(f => f.time == findingKF.time));
 
                                                 if (tIndex !== -1) {
@@ -196,7 +190,7 @@
 
                                 newKfs.forEach((frame, indexf) => {
                                     let keyframe = {
-                                        frame: ((frame[0].time * 30).toFixed() * 1),
+                                        frame: ((frame[0].time * 29).toFixed() * 1),
                                         elements: {
                                         }
                                     }
@@ -209,17 +203,22 @@
                                             frame.forEach(kf => {
                                                 axis.forEach(a => {
                                                     elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()] = kf.data_points[0][a] * 1;
+
+                                                    if (kf.channel == "rotation")
+                                                    {
+                                                        elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()] = -elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()];
+                                                    }
                                                 });
                                             });
                                             // 30 is fps VS uses for anims
-                                            if (anim.keyframes.find(e => e.frame === (frame[0].time * 30).toFixed() * 1) !== undefined) {
-                                                anim.keyframes.find(e => e.frame === (frame[0].time * 30).toFixed() * 1).elements[groupC[g].name] = elemA;
+                                            if (anim.keyframes.find(e => e.frame === (frame[0].time * 29).toFixed() * 1) !== undefined) {
+                                                anim.keyframes.find(e => e.frame === (frame[0].time * 29).toFixed() * 1).elements[groupC[g].name] = elemA;
                                             } else {
                                                 keyframe.elements[groupC[g].name] = elemA;
                                             }
                                         }
                                     }
-                                    if (anim.keyframes.find(e => e.frame === (frame[0].time * 30).toFixed() * 1) === undefined) {
+                                    if (anim.keyframes.find(e => e.frame === (frame[0].time * 29).toFixed() * 1) === undefined) {
                                         anim.keyframes.push(keyframe);
                                     }
                                 });
@@ -331,11 +330,11 @@
                 }                
             });
 
-            MenuBar.addAction(exportVsActionLegacy, "file.export");
+            MenuBar.addAction(exportVsAction, "file.export");
             MenuBar.addAction(importVsAction, "file.import");
         },
         onunload() {
-            exportVsActionLegacy.delete();
+            exportVsAction.delete();
             importVsAction.delete();
         }
     });
