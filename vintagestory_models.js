@@ -31,10 +31,23 @@
                     //textures
                     if (Project.textures.length > 0) 
                     {
+						let TFS = "" // Texture Folder Suffix
+						let NSS = "" // Texture Folder Suffix
+						
                         for (let i = 0; i < Project.textures.length; i++) 
                         {
+							if (Project.textures[i].folder) {
+                                TFS = "/";
+                            } else {
+                                TFS = "";
+                            }
+							if (Project.textures[i].namespace) {
+                                TFS = ":";
+                            } else {
+                                TFS = "";
+                            }
                             eval(`vs_model_json.textureSizes["${Project.textures[i].id}"] = [${Project.textures[i].width}, ${Project.textures[i].height}]`);
-			    vs_model_json.textures[Project.textures[i].id] = Project.textures[i].namespace + ":" + Project.textures[i].folder + "/" + Project.textures[i].name;
+							vs_model_json.textures[Project.textures[i].id] = Project.textures[i].namespace + NSS + Project.textures[i].folder + TFS + Project.textures[i].name.replace(".png", "");
                         }
                     }
 
