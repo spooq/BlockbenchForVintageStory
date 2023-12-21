@@ -36,15 +36,15 @@
 						
                         for (let i = 0; i < Project.textures.length; i++) 
                         {
-							if (Project.textures[i].folder) {
+                            if (Project.textures[i].folder) {
                                 TFS = "/";
                             } else {
                                 TFS = "";
                             }
-							if (Project.textures[i].namespace) {
-                                TFS = ":";
+                            if (Project.textures[i].namespace) {
+                                NSS = ":";
                             } else {
-                                TFS = "";
+                                NSS = "";
                             }
                             eval(`vs_model_json.textureSizes["${Project.textures[i].id}"] = [${Project.textures[i].width}, ${Project.textures[i].height}]`);
 							vs_model_json.textures[Project.textures[i].id] = Project.textures[i].namespace + NSS + Project.textures[i].folder + TFS + Project.textures[i].name.replace(".png", "");
