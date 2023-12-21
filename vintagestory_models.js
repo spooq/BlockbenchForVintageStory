@@ -34,14 +34,7 @@
                         for (let i = 0; i < Project.textures.length; i++) 
                         {
                             eval(`vs_model_json.textureSizes["${Project.textures[i].id}"] = [${Project.textures[i].width}, ${Project.textures[i].height}]`);
-
-                            if (Blockbench.operating_system == "Windows") 
-                            {
-                                // remove Drive name
-                                vs_model_json.textures[Project.textures[i].id] = Project.textures[i].path.substring(2).replace(".png", "").replaceAll("\\", "/");
-                            } else {
-                                vs_model_json.textures[Project.textures[i].id] = Project.textures[i].path.replace(".png", "").replaceAll("\\", "/").replaceAll("\/", "/");
-                            }
+			    vs_model_json.textures[Project.textures[i].id] = Project.textures[i].namespace + ":" + Project.textures[i].folder + "/" + Project.textures[i].name;
                         }
                     }
 
