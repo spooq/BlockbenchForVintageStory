@@ -1,19 +1,21 @@
 (function () {
     let exportVsAction;
     let importVsAction;
-
-    Plugin.register('vintagestory_models', {
+	
+    BBPlugin.register('vintagestory_models', {
         title: 'Vintage Story Models',
         icon: 'park',
-        author: 'Malik12tree',
+        author: 'Crabb',
         description: 'Import/export VintageStory models.',
-        version: '1.0.0',
+        version: '1.0.1',
         variant: "both",
         onload() {
             exportVsAction = new Action("exportVsModel", {
                 name: "Export Vintage Story Model",
                 icon: "park",
                 click: function () {
+					console.log("export vintagestory_format")
+					
                     const axis = ["x", "y", "z"];
                     const faces = ["north", "east", "south", "west", "up", "down",];
                     const channels = ["rotation", "position", "scale"];
@@ -31,6 +33,10 @@
                     //textures
                     if (Project.textures.length > 0) 
                     {
+						console.log("here")
+						console.log(Project)
+						console.log(Project.textures)
+						
 						let TFS = "" // Texture Folder Suffix
 						let NSS = "" // Texture Folder Suffix
 						
@@ -46,6 +52,7 @@
                             } else {
                                 NSS = "";
                             }
+							
                             eval(`vs_model_json.textureSizes["${Project.textures[i].id}"] = [${Project.textures[i].width}, ${Project.textures[i].height}]`);
 							vs_model_json.textures[Project.textures[i].id] = Project.textures[i].namespace + NSS + Project.textures[i].folder + TFS + Project.textures[i].name.replace(".png", "");
                         }
@@ -76,7 +83,6 @@
                                     up: { texture: "#0", uv: [0, 0, 0, 0] },
                                     down: { texture: "#0", uv: [0, 0, 0, 0] }
                                 },
-                                parent: obj.parent === "root" ? null : obj.parent.name,
                                 rotationX: obj.rotation[0],
                                 rotationY: obj.rotation[1],
                                 rotationZ: obj.rotation[2],
@@ -124,7 +130,6 @@
                                     up: { texture: "#0", uv: [0, 0, 0, 0] },
                                     down: { texture: "#0", uv: [0, 0, 0, 0] }
                                 },
-                                parent: obj.parent === "root" ? null : obj.parent.name,
                                 children: [],
                                 rotationX: obj.rotation[0],
                                 rotationY: obj.rotation[1],
