@@ -1,1 +1,1 @@
-stuff
+required text
