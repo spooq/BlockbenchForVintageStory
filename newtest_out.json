@@ -2,10 +2,14 @@
 	"textureWidth": 16,
 	"textureHeight": 16,
 	"textureSizes": {
-		"letter1": [32, 32]
+		"gameclay": [32, 32],
+		"samemod": [32, 32],
+		"differentmod": [32, 32]
 	},
 	"textures": {
-		"letter1": "game:block/clay/hardened/red1"
+		"gameclay": "game:block/clay/hardened/red1",
+		"samemod": "block/bbtest/bbtest",
+		"differentmod": "anothermod:block/bbtest/bbtest"
 	},
 	"elements": [
 		{
@@ -90,7 +94,7 @@
 									"uv": [0, 0, 1, 1]
 								},
 								"south": {
-									"texture": "#letter1",
+									"texture": "#gameclay",
 									"uv": [6.5, 2.5, 7.5, 3.5]
 								},
 								"west": {
@@ -98,7 +102,7 @@
 									"uv": [0, 0, 1, 1]
 								},
 								"up": {
-									"texture": "#letter1",
+									"texture": "#gameclay",
 									"uv": [0, 0, 1, 1]
 								},
 								"down": {
@@ -117,27 +121,27 @@
 							"rotationZ": 0,
 							"faces": {
 								"north": {
-									"texture": "#null",
+									"texture": "#samemod",
 									"uv": [0, 0, 3, 3]
 								},
 								"east": {
-									"texture": "#null",
+									"texture": "#samemod",
 									"uv": [0, 0, 3, 3]
 								},
 								"south": {
-									"texture": "#null",
+									"texture": "#samemod",
 									"uv": [0, 0, 3, 3]
 								},
 								"west": {
-									"texture": "#null",
+									"texture": "#samemod",
 									"uv": [0, 0, 3, 3]
 								},
 								"up": {
-									"texture": "#null",
+									"texture": "#samemod",
 									"uv": [0, 0, 3, 3]
 								},
 								"down": {
-									"texture": "#null",
+									"texture": "#samemod",
 									"uv": [0, 0, 3, 3]
 								}
 							}
