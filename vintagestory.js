@@ -139,14 +139,16 @@
                             };
 
                             // Handle faces
-                            console.log("faces")
                             for (let face of faces) {
                                 // Face texture
                                 if (obj.faces[face].texture) {
                                     var texture = Project.textures.find(e => e.uuid == obj.faces[face].texture)
-                                    console.log("texture " + texture)
-                                    console.log("faces texture " + obj.faces[face].texture)
-                                    element.faces[face].texture = "#" + texture.id;
+                                    if (texture) {
+                                        element.faces[face].texture = "#" + texture.id;
+                                    }
+                                    else {
+                                        console.log("Texture not found")
+                                    }
                                 }
 
                                 // Face UV
@@ -161,8 +163,6 @@
                             elements.push(element);
                         }
                         else if (obj.type == "group") {
-                            console.log("group")
-
                             let element = {
                                 name: obj.name,
                                 from: [0, 0, 0],
