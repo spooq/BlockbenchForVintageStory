@@ -80,7 +80,7 @@
                         animations: []
                     };
 
-                    //textures
+                    // Textures
                     if (Project.textures.length > 0) {
                         let TFS = "" // Texture Folder Suffix
                         let NSS = "" // Namespace Suffix
@@ -108,45 +108,40 @@
                     }
 
                     function createElement(elements, obj) {
-                        if (!obj.export) return;
-
                         if (obj.type === "cube") {
                             let element = {
                                 name: obj.name,
                                 from: [obj.from[0] + world_center, obj.from[1], obj.from[2] + world_center],
                                 to: [obj.to[0] + world_center, obj.to[1], obj.to[2] + world_center],
                                 rotationOrigin: [obj.origin[0] + world_center, obj.origin[1], obj.origin[2] + world_center],
-                                faces: {
-                                    north: { texture: "#0", uv: [0, 0, 0, 0] },
-                                    east: { texture: "#0", uv: [0, 0, 0, 0] },
-                                    south: { texture: "#0", uv: [0, 0, 0, 0] },
-                                    west: { texture: "#0", uv: [0, 0, 0, 0] },
-                                    up: { texture: "#0", uv: [0, 0, 0, 0] },
-                                    down: { texture: "#0", uv: [0, 0, 0, 0] }
-                                },
                                 rotationX: obj.rotation[0],
                                 rotationY: obj.rotation[1],
                                 rotationZ: obj.rotation[2],
+                                faces: {
+                                    north: { texture: "#null", uv: [0, 0, 0, 0] },
+                                    east: { texture: "#null", uv: [0, 0, 0, 0] },
+                                    south: { texture: "#null", uv: [0, 0, 0, 0] },
+                                    west: { texture: "#null", uv: [0, 0, 0, 0] },
+                                    up: { texture: "#null", uv: [0, 0, 0, 0] },
+                                    down: { texture: "#null", uv: [0, 0, 0, 0] }
+                                },
                             };
 
-                            //faces
+                            // Handle faces
+                            console.log("faces")
                             for (let face of faces) {
-                                if (Project.textures.length > 0) {
-                                    if (!Format.single_texture) {
-                                        if (Project.textures.find(e => e.uuid == obj.faces[face].texture) !== false) {
-                                            element.faces[face].texture = "#" + Project.textures.find(e => e.uuid == obj.faces[face].texture).id;
-                                        } else {
-                                            element.faces[face].texture = "#missing";
-                                        }
-
-                                    } else {
-                                        element.faces[face].texture = "#" + obj.faces[face].getTexture().id;
-                                    }
+                                // Face texture
+                                if (obj.faces[face].texture) {
+                                    var texture = Project.textures.find(e => e.uuid == obj.faces[face].texture)
+                                    console.log("texture " + texture)
+                                    console.log("faces texture " + obj.faces[face].texture)
+                                    element.faces[face].texture = "#" + texture.id;
                                 }
 
-                                element.faces[face].autoUv = Project.box_uv;
+                                // Face UV
                                 element.faces[face].uv = [obj.faces[face].uv[0], obj.faces[face].uv[1], obj.faces[face].uv[2], obj.faces[face].uv[3]];
 
+                                // Face rotation
                                 if (obj.faces[face].rotation !== 0) {
                                     element.faces[face].rotation = obj.faces[face].rotation;
                                 }
@@ -155,18 +150,20 @@
                             elements.push(element);
                         }
                         else if (obj.type == "group") {
+                            console.log("group")
+
                             let element = {
                                 name: obj.name,
                                 from: [0, 0, 0],
                                 to: [0, 0, 0],
                                 rotationOrigin: [obj.origin[0] + world_center, obj.origin[1], obj.origin[2] + world_center],
                                 faces: {
-                                    north: { texture: "#0", uv: [0, 0, 0, 0] },
-                                    east: { texture: "#0", uv: [0, 0, 0, 0] },
-                                    south: { texture: "#0", uv: [0, 0, 0, 0] },
-                                    west: { texture: "#0", uv: [0, 0, 0, 0] },
-                                    up: { texture: "#0", uv: [0, 0, 0, 0] },
-                                    down: { texture: "#0", uv: [0, 0, 0, 0] }
+                                    north: { texture: "#null", uv: [0, 0, 0, 0] },
+                                    east: { texture: "#null", uv: [0, 0, 0, 0] },
+                                    south: { texture: "#null", uv: [0, 0, 0, 0] },
+                                    west: { texture: "#null", uv: [0, 0, 0, 0] },
+                                    up: { texture: "#null", uv: [0, 0, 0, 0] },
+                                    down: { texture: "#null", uv: [0, 0, 0, 0] }
                                 },
                                 children: [],
                                 rotationX: obj.rotation[0],
@@ -303,7 +300,8 @@
                             namespace["game"] = "C:/Users/spooo/AppData/Roaming/Vintagestory/assets/survival/textures"
                             namespace["youvegotmail"] = "C:/Users/spooo/source/repos/youvegotmail/youvegotmail/assets/youvegotmail/textures/"
 
-                            var texture = new Texture({ id: key })
+                            var texture = new Texture().add()
+                            texture.id = key
 
                             // Find namespace
                             var link = model.textures[key]
@@ -326,10 +324,8 @@
                             texture.folder = pathArr.join('/')
 
                             // Record
-                            texture.add()
                             new_textures.push(texture);
                             texture_ids[key] = texture
-                            console.log("key => " + key)
                             
                         }
 
@@ -411,7 +407,6 @@
                                         new_face.texture = false;
                                     } else if (read_face.texture) {
                                         var id = read_face.texture.replace(/^#/, '')
-                                        console.log("id => " + id)
                                         new_face.texture = texture_ids[id].uuid;
                                     }
                                 }
