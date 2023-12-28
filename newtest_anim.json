@@ -1,0 +1,96 @@
+{
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+		"1": [32, 32],
+		"letter1": [32, 32]
+	},
+	"textures": {
+		"1": "game:block/clay/hardened/red2",
+		"letter1": "game:block/clay/hardened/red1"
+	},
+	"elements": [
+		{
+			"name": "group",
+			"from": [0, 0, 0],
+			"to": [0, 0, 0],
+			"rotationOrigin": [8, 0, 8],
+			"faces": {
+				"north": {
+					"texture": "#null",
+					"uv": [0, 0, 0, 0]
+				},
+				"east": {
+					"texture": "#null",
+					"uv": [0, 0, 0, 0]
+				},
+				"south": {
+					"texture": "#null",
+					"uv": [0, 0, 0, 0]
+				},
+				"west": {
+					"texture": "#null",
+					"uv": [0, 0, 0, 0]
+				},
+				"up": {
+					"texture": "#null",
+					"uv": [0, 0, 0, 0]
+				},
+				"down": {
+					"texture": "#null",
+					"uv": [0, 0, 0, 0]
+				}
+			},
+			"children": [
+				{
+					"name": "cube",
+					"from": [8, 0, 8],
+					"to": [10, 2, 10],
+					"rotationOrigin": [8, 0, 8],
+					"rotationX": 0,
+					"rotationY": 0,
+					"rotationZ": 0,
+					"faces": {
+						"north": {
+							"texture": "#null",
+							"uv": [0, 0, 2, 2]
+						},
+						"east": {
+							"texture": "#null",
+							"uv": [0, 0, 2, 2]
+						},
+						"south": {
+							"texture": "#null",
+							"uv": [0, 0, 2, 2]
+						},
+						"west": {
+							"texture": "#null",
+							"uv": [0, 0, 2, 2]
+						},
+						"up": {
+							"texture": "#null",
+							"uv": [0, 0, 2, 2]
+						},
+						"down": {
+							"texture": "#null",
+							"uv": [0, 0, 2, 2]
+						}
+					}
+				}
+			],
+			"rotationX": 0,
+			"rotationY": 0,
+			"rotationZ": 0
+		}
+	],
+	"animations": [
+		{
+			"name": "animation",
+			"code": "animation",
+			"onActivityStopped": "EaseOut",
+			"onAnimationEnd": "Stop",
+			"quantityframes": 30,
+			"keyframes": []
+		}
+	]
+}

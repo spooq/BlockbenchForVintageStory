@@ -6,6 +6,9 @@
 
     var setting_gamepath;
 
+    var autosettings = [];
+    var namespace = {}
+
     const world_center = 8;
 
     BBPlugin.register('vintagestory', {
@@ -47,7 +50,7 @@
                 integer_size: false,
                 java_face_properties: true,
                 locators: true,
-                meshes: true,
+                meshes: false,
                 model_identifier: false,
                 optional_box_uv: false,
                 paint_mode: true,
@@ -113,12 +116,14 @@
                         }
                     }
 
-                    //elements 
+                    // Elements 
                     for (let obj of Outliner.root) {
                         createElement(vs_model_json.elements, obj);
                     }
 
                     function createElement(elements, obj) {
+                        if (!obj.export) return;
+
                         if (obj.type === "cube") {
                             let element = {
                                 name: obj.name,
@@ -163,6 +168,8 @@
                             elements.push(element);
                         }
                         else if (obj.type == "group") {
+                            // TODO: check for child cube with the same name so it can be collapsed
+
                             let element = {
                                 name: obj.name,
                                 from: [0, 0, 0],
@@ -200,6 +207,7 @@
                         Object.keys(animation.animators).forEach(key => {
                             animators.push(animation.animators[key]);
                         });
+
                         let anim = {
                             name: animation.name,
                             code: (animation.name).toLowerCase().replace(" ", "_"),
@@ -218,8 +226,6 @@
                         }
 
                         animators.forEach(animator => {
-                            // keyframes
-                            //gather
                             let newKfs = [];
 
                             channels.forEach(channel => {
@@ -305,26 +311,52 @@
                     var texture_ids = {}
                     if (model.textures) {
                         for (var key in model.textures) {
-                            namespace = {}
-                            namespace[""] = path + "../textures"
-                            namespace["game"] = settings.vs_gamepath.value + "/assets/survival/textures"
-                            //namespace["youvegotmail"] = "C:/Users/spooo/source/repos/youvegotmail/youvegotmail/assets/youvegotmail/textures/"
-
+                            // Create a new texture
                             var texture = new Texture().add()
                             texture.id = key
+
+                            // Update game namespace from settings
+                            namespace["game"] = settings.vs_gamepath.value.replaceAll('\\', '/') + "/assets/survival/textures"
+
+                            // Update blank/relative namespace if we're in an assets folder
+                            if (path.includes("assets")) {
+                                var blankNSArr = []
+                                for (var fragment of path.replaceAll('\\', '/').split('/')) {
+                                    if (fragment == "shapes") {
+                                        break;
+                                    }
+                                    blankNSArr.push(fragment)
+                                }
+                                namespace[""] = blankNSArr.join('/') + "/textures"
+                            }
 
                             // Find namespace
                             var link = model.textures[key]
                             var spaces = link.split(':')
                             if (spaces.length > 1) {
                                 texture.namespace = spaces[0]
+                                if (texture.namespace == "survival") {
+                                    texture.namespace = "game"
+                                }
+
                                 link = spaces[1]
-                                if (link == "survival") {
-                                    link = "game"
+
+                                // New namespace found, make a setting for it
+                                if (!namespace[texture.namespace]) {
+                                    console.log("texture.namespace => " + texture.namespace)
+                                    namespace[texture.namespace] = namespace[""]
+
+                                    autosettings.push(new Setting('vs_namespace_' + texture.namespace, {
+                                        name: 'Vintage Story ' + texture.namespace + ' folder',
+                                        description: 'Unzip the mod folder and set this path to the assets/mod/textures folder',
+                                        category: 'defaults',
+                                        value: namespace[texture.namespace],
+                                        type: 'text',
+                                    }));
                                 }
                             }
                             else {
-                                texture.namespace = "";
+                                texture.namespace = ""
                             }
 
                             // Load texture
@@ -352,7 +384,6 @@
                     for (let element of model.elements) {
                         parseElement(element, root_group, [-world_center, 0, -world_center], new_elements, new_textures);
                     }
-                    
 
                     function parseElement(element, group, parentPositionOrigin, new_elements, new_textures) {
                         // From/to
@@ -420,7 +451,10 @@
                                         new_face.texture = false;
                                     } else if (read_face.texture) {
                                         var id = read_face.texture.replace(/^#/, '')
-                                        new_face.texture = texture_ids[id].uuid;
+                                        if (texture_ids[id])
+                                            new_face.texture = texture_ids[id].uuid;
+                                        else
+                                            console.log("Cannot resolve texture id " + id)
                                     }
                                 }
                             }
@@ -435,6 +469,8 @@
                     Validator.validate()
                 }
             });
+
+            format.codec = codec
 
             import_action = new Action('import_vsmodel', {
                 id: "import_vintagestory",
@@ -478,6 +514,7 @@
             export_action.delete()
 
             setting_gamepath.delete()
+            autosettings.forEach(setting => { setting.delete() })
         }
     })
 })()
