@@ -48,7 +48,7 @@
                 show_on_start_screen: true,
                 single_texture: false,
                 target: ['Vintage Story'],
-                texture_folder: true,
+                texture_folder: false,
                 texture_meshes: false,
                 uv_rotation: true,
                 vertex_color_ambient_occlusion: false,
@@ -279,9 +279,9 @@
                 parse(model, path, add) {
 
                     // Setup undo
-                    var new_cubes = [];
+                    var new_elements = [];
                     var new_textures = [];
-                    Undo.initEdit({ elements: new_cubes, outliner: true, textures: new_textures })
+                    //Undo.initEdit()//{ elements: new_elements, textures: new_textures }) //outliner: true, 
 
                     // New group
                     Project.added_models++;
@@ -295,9 +295,43 @@
                     
                     // Resolve textures
                     var texture_ids = {}
-                    var texture_paths = {}
-                    var path_arr = path.split(osfs)
                     if (model.textures) {
+                        for (var key in model.textures) {
+                            // TODO: namespace settings dialog
+                            namespace = {}
+                            namespace[""] = path + "../textures"
+                            namespace["game"] = "C:/Users/spooo/AppData/Roaming/Vintagestory/assets/survival/textures"
+                            namespace["youvegotmail"] = "C:/Users/spooo/source/repos/youvegotmail/youvegotmail/assets/youvegotmail/textures/"
+
+                            var texture = new Texture({ id: key })
+
+                            // Find namespace
+                            var link = model.textures[key]
+                            var spaces = link.split(':')
+                            if (spaces.length > 1) {
+                                texture.namespace = spaces[0]
+                                link = spaces[1]
+                            }
+                            else {
+                                texture.namespace = "";
+                            }
+
+                            // Load texture
+                            var fullPath = "file:///" + namespace[texture.namespace] + "/" + link + ".png"
+                            texture = texture.fromPath(fullPath)
+                            
+                            // Find folder
+                            var pathArr = link.split('/')
+                            pathArr.pop()
+                            texture.folder = pathArr.join('/')
+
+                            // Record
+                            texture.add()
+                            new_textures.push(texture);
+                            texture_ids[key] = texture
+                            console.log("key => " + key)
+                            
+                        }
 
                         //Select Last Texture
                         if (Texture.all.length > 0) {
@@ -307,10 +341,11 @@
 
                     // Resolve elements
                     for (let element of model.elements) {
-                        parseElement(element, root_group, [-world_center, 0, -world_center]);
+                        parseElement(element, root_group, [-world_center, 0, -world_center], new_elements, new_textures);
                     }
+                    
 
-                    function parseElement(element, group, parentPositionOrigin, new_cubes, new_textures) {
+                    function parseElement(element, group, parentPositionOrigin, new_elements, new_textures) {
                         // From/to
                         let from = [element.from[0] + parentPositionOrigin[0], element.from[1] + parentPositionOrigin[1], element.from[2] + parentPositionOrigin[2]];
                         let to = [element.to[0] + parentPositionOrigin[0], element.to[1] + parentPositionOrigin[1], element.to[2] + parentPositionOrigin[2]];
@@ -342,8 +377,10 @@
                                 rotation: rotation
                             }).init().addTo(group);
 
+                            new_elements.push(parent_group)
+
                             for (let child_element of element.children) {
-                                parseElement(child_element, parent_group, from, new_cubes, new_textures);
+                                parseElement(child_element, parent_group, from, new_elements, new_textures);
                             }
                         }
 
@@ -359,43 +396,23 @@
                         // Faces
                         if (element.faces) {
                             for (var key in element.faces) {
-
                                 var read_face = element.faces[key];
                                 var new_face = new_cube.faces[key];
                                 if (read_face === undefined) {
-
                                     new_face.texture = null
                                     new_face.uv = [0, 0, 0, 0]
                                 } else {
                                     if (typeof read_face.uv === 'object') {
-
                                         new_face.uv.forEach((n, i) => {
                                             new_face.uv[i] = read_face.uv[i] * UVEditor.getResolution(i % 2) / 16;
                                         })
                                     }
-                                    if (read_face.texture === '#missing') {
+                                    if (read_face.texture === '#null') {
                                         new_face.texture = false;
-
                                     } else if (read_face.texture) {
                                         var id = read_face.texture.replace(/^#/, '')
-                                        var t = texture_ids[id]
-
-                                        if (t instanceof Texture === false) {
-                                            if (texture_paths[read_face.texture]) {
-                                                var t = texture_paths[read_face.texture]
-                                                if (t.id === 'particle') {
-                                                    t.extend({ id: id, name: '#' + id }).loadEmpty(3)
-                                                }
-                                            } else {
-                                                var t = new Texture({ id: id, name: '#' + id }).add(false).loadEmpty(3)
-                                                texture_ids[id] = t
-                                                new_textures.push(t);
-                                            }
-                                        }
-                                        new_face.texture = t.uuid;
-                                    }
-                                    if (typeof read_face.tintindex == 'number') {
-                                        new_face.tint = read_face.tintindex;
+                                        console.log("id => " + id)
+                                        new_face.texture = texture_ids[id].uuid;
                                     }
                                 }
                             }
@@ -403,10 +420,10 @@
 
                         // Done
                         new_cube.init().addTo(parent_group)
-                        new_cubes.add(new_cube)
+                        new_elements.push(new_cube)
                     }
                     
-                    Undo.finishEdit("vsimporter", { "elements": new_cubes, "textures": new_textures });
+                    //Undo.finishEdit("vsimporter")//, { "elements": new_elements, "textures": new_textures });
                     Validator.validate()
                 }
             });

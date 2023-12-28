@@ -8,7 +8,7 @@
 	"textureSizes": {
 	},
 	"textures": {
-		"letter1": "block/mail/letters/letter1"
+		"letter1": "game:block/clay/hardened/red1"
 	},
 	"elements": [
 		{
@@ -33,7 +33,7 @@
 					"faces": {
 						"north": { "texture": "#null", "uv": [ 5.0, 4.0, 12.0, 11.0 ], "autoUv": false },
 						"east": { "texture": "#null", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
-						"south": { "texture": "#null", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"south": { "texture": "#letter1", "uv": [ 6.5, 2.5, 7.5, 3.5 ] },
 						"west": { "texture": "#null", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
 						"up": { "texture": "#letter1", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
 						"down": { "texture": "#null", "uv": [ 0.0, 0.0, 1.0, 1.0 ] }
