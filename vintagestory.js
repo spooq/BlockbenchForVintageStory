@@ -70,7 +70,6 @@
                     const axis = ["x", "y", "z"];
                     const faces = ["north", "east", "south", "west", "up", "down",];
                     const channels = ["rotation", "position", "scale"];
-                    const world_center = 0;
 
                     let vs_model_json = {
                         textureWidth: Project.texture_width,
@@ -279,27 +278,21 @@
                 },
                 parse(model, path, add) {
 
-                    var previous_texture_length = add ? Texture.all.length : 0
+                    // Setup undo
                     var new_cubes = [];
                     var new_textures = [];
-                    if (add) {
-                        Undo.initEdit({ elements: new_cubes, outliner: true, textures: new_textures })
-                        Project.added_models++;
-                        var import_group = new Group(pathToName(path, false)).init()
-                    }
+                    Undo.initEdit({ elements: new_cubes, outliner: true, textures: new_textures })
 
+                    // New group
+                    Project.added_models++;
+                    var root_group = new Group(pathToName(path, false)).init().addTo();
+
+                    // Texture sizes
                     if (model.texture_size instanceof Array && !add) {
                         Project.texture_width = Math.clamp(parseInt(model.texture_size[0]), 1, Infinity)
                         Project.texture_height = Math.clamp(parseInt(model.texture_size[1]), 1, Infinity)
                     }
-
-                    Undo.initEdit({ "elements": [], "uv_only": false, "textures": [] });
-
-                    // Root node
-                    let root_group = new Group({
-                        name: path.name
-                    }).init().addTo();
-
+                    
                     // Resolve textures
                     var texture_ids = {}
                     var texture_paths = {}
@@ -314,12 +307,20 @@
 
                     // Resolve elements
                     for (let element of model.elements) {
-                        parseElement(element, root_group. [world_center, world_center, world_center]);
+                        parseElement(element, root_group, [-world_center, 0, -world_center]);
                     }
 
-                    function parseElement(element, group, origin) {
-                        // Origin
-                        let origin = [origin[0] + element.rotationOrigin[0], origin[1] + element.rotationOrigin[1], origin[2] + element.rotationOrigin[2]];
+                    function parseElement(element, group, parentPositionOrigin, new_cubes, new_textures) {
+                        // From/to
+                        let from = [element.from[0] + parentPositionOrigin[0], element.from[1] + parentPositionOrigin[1], element.from[2] + parentPositionOrigin[2]];
+                        let to = [element.to[0] + parentPositionOrigin[0], element.to[1] + parentPositionOrigin[1], element.to[2] + parentPositionOrigin[2]];
+
+                        // Rotation origin
+                        let rotationOrigin = [
+                            element.rotationOrigin[0],
+                            element.rotationOrigin[1],
+                            element.rotationOrigin[2]
+                        ];
 
                         // Rotation
                         let rotation = [
@@ -328,16 +329,30 @@
                             element.rotationZ == undefined ? 0 : element.rotationZ
                         ];
 
-                        // From/to
-                        let from = [element.from[0] - world_center, element.from[1], element.from[2] - world_center];
-                        let to = [element.to[0] - world_center, element.to[1], element.to[2] - world_center];
+                        // Create group and descend children if required
+                        var parent_group = group;
+                        if (
+                            element.children != undefined &&
+                            element.children != null &&
+                            element.children.length > 0
+                        ) {
+                            parent_group = new Group().extend({
+                                name: element.name,
+                                origin: rotationOrigin,
+                                rotation: rotation
+                            }).init().addTo(group);
+
+                            for (let child_element of element.children) {
+                                parseElement(child_element, parent_group, from, new_cubes, new_textures);
+                            }
+                        }
 
                         // Create cube
                         let new_cube = new Cube({
                             name: element.name,
                             from: from,
                             to: to,
-                            origin: origin,
+                            origin: rotationOrigin,
                             rotation: rotation
                         })
 
@@ -386,41 +401,12 @@
                             }
                         }
 
-                        new_cube.init()
-
-                        // Create groups
-                        if (
-                            element.children != undefined &&
-                            element.children != null &&
-                            element.children.length > 0
-                        ) {
-                            let new_group = new Group().extend({
-                                name: element.name,
-                                origin: origin,
-                                rotation: rotation
-                            }).init().addTo(group);
-
-                            new_cube.addTo(new_group);
-                            /*
-                            if (!(
-                                element.from[0] == 0 && element.from[1] == 0 && element.from[2] == 0 &&
-                                element.to[0] == 0 && element.to[1] == 0 && element.to[2] == 0
-                            )) {                               
-                            }
-                            */
-
-                            for (let child_element of element.children) {
-                                parseElement(child_element, new_group);
-                            }
-                        }
-                        else {
-                            new_cube.addTo(group);
-                        }
+                        // Done
+                        new_cube.init().addTo(parent_group)
+                        new_cubes.add(new_cube)
                     }
-
-                    if (add) {
-                        Undo.finishEdit("vsimporter");
-                    }
+                    
+                    Undo.finishEdit("vsimporter", { "elements": new_cubes, "textures": new_textures });
                     Validator.validate()
                 }
             });
