@@ -306,11 +306,21 @@
                         Project.texture_width = Math.clamp(parseInt(model.texture_size[0]), 1, Infinity)
                         Project.texture_height = Math.clamp(parseInt(model.texture_size[1]), 1, Infinity)
                     }
-                    
-                    // Resolve textures
+
+                    // Get existing textures
                     var texture_ids = {}
+                    Project.textures.forEach(tex => {
+                        texture_ids[tex.id] = tex
+                    })
+
+                    // Resolve new textures
                     if (model.textures) {
                         for (var key in model.textures) {
+                            // Check if texture has already been loaded
+                            var existingTexture = Project.textures.find(e => e.id == key)
+                            if (existingTexture)
+                                continue;
+
                             // Create a new texture
                             var texture = new Texture().add()
                             texture.id = key
@@ -352,6 +362,7 @@
                                         category: 'defaults',
                                         value: namespace[texture.namespace],
                                         type: 'text',
+                                        onchange: (value) => { namespace[texture.namespace] = value; console.log("updated") }
                                     }));
                                 }
                             }
@@ -371,7 +382,6 @@
                             // Record
                             new_textures.push(texture);
                             texture_ids[key] = texture
-                            
                         }
 
                         //Select Last Texture
