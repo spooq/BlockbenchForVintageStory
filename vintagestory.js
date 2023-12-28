@@ -15,7 +15,10 @@
         await_loading: true,
         creation_date: "2023-12-22",
         onload() {
+            const world_center = 8;
+
             var format = new ModelFormat('vintagestory', {
+                id: "vintagestorymodel",
                 name: 'Vintage Story Model',
                 description: 'Model Format for VS specific features',
                 animated_textures: false,
@@ -63,13 +66,11 @@
                         return model.elements;
                     }
                 },
-                compile(options) {
-                    console.log("compile")
-
+                compile(exportOptions) {
                     const axis = ["x", "y", "z"];
                     const faces = ["north", "east", "south", "west", "up", "down",];
                     const channels = ["rotation", "position", "scale"];
-                    const world_center = Format.name === "Java Block/Item" ? 0 : 8;
+                    const world_center = 0;
 
                     let vs_model_json = {
                         textureWidth: Project.texture_width,
@@ -183,110 +184,246 @@
                     }
 
                     //Animation
-                    if (Format.animation_mode) {
-                        for (let i = 0; i < Animation.all.length; i++) {
-                            let animation = Animation.all[i];
+                    for (let i = 0; i < Animation.all.length; i++) {
+                        let animation = Animation.all[i];
 
-                            const snap_time = (1 / Math.clamp(animation.snapping, 1, 120)).toFixed(4) * 1;
+                        const snap_time = (1 / Math.clamp(animation.snapping, 1, 120)).toFixed(4) * 1;
 
-                            let animators = []
-                            Object.keys(animation.animators).forEach(key => {
-                                animators.push(animation.animators[key]);
-                            });
-                            let anim = {
-                                name: animation.name,
-                                code: (animation.name).toLowerCase().replace(" ", "_"),
-                                onActivityStopped: "EaseOut",
-                                onAnimationEnd: "Repeat",
-                                quantityframes: (animation.length * 30).toFixed() * 1,
-                                keyframes: [
-                                ],
-                            }
-
-                            // loop mode
-                            if (animation.loop === "hold") {
-                                anim.onAnimationEnd = "Hold"
-                            } else if (animation.loop === "once") {
-                                anim.onAnimationEnd = "Stop"
-                            }
-
-                            animators.forEach(animator => {
-                                // keyframes
-                                //gather
-                                let newKfs = [];
-
-                                channels.forEach(channel => {
-                                    if (animator.group !== undefined && animator[channel].length > 0) {
-                                        var keyframes_sorted = animator[channel].slice().sort((a, b) => a.time - b.time);
-                                        for (let k = 0; k <= keyframes_sorted.last().time + 0.5; k += snap_time) {
-                                            const timeIndex = Math.trunc(k * 10000) / 10000;
-
-                                            //target kf
-                                            const findingKF = animator[channel].find(kf => getRangeBool(kf.time, timeIndex - .02, timeIndex + .02));
-                                            if (findingKF !== undefined) {
-                                                const tIndex = newKfs.findIndex(e => e.find(f => f.time == findingKF.time));
-
-                                                if (tIndex !== -1) {
-                                                    newKfs[tIndex].push(findingKF);
-                                                } else {
-                                                    newKfs.push([findingKF]);
-                                                }
-                                            }
-                                        }
-                                    }
-                                });
-
-                                newKfs.forEach((frame, indexf) => {
-                                    let keyframe = {
-                                        frame: ((frame[0].time * 29).toFixed() * 1),
-                                        elements: {
-                                        }
-                                    }
-                                    const groupC = [animator.group]
-
-                                    for (let g = 0; g < groupC.length; g++) {
-                                        let elemA = {};
-
-                                        if (animator.keyframes.length > 0) {
-                                            frame.forEach(kf => {
-                                                axis.forEach(a => {
-                                                    elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()] = kf.data_points[0][a] * 1;
-
-                                                    if (kf.channel == "rotation") {
-                                                        elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()] = -elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()];
-                                                    }
-                                                });
-                                            });
-                                            // 30 is fps VS uses for anims
-                                            if (anim.keyframes.find(e => e.frame === (frame[0].time * 29).toFixed() * 1) !== undefined) {
-                                                anim.keyframes.find(e => e.frame === (frame[0].time * 29).toFixed() * 1).elements[groupC[g].name] = elemA;
-                                            } else {
-                                                keyframe.elements[groupC[g].name] = elemA;
-                                            }
-                                        }
-                                    }
-                                    if (anim.keyframes.find(e => e.frame === (frame[0].time * 29).toFixed() * 1) === undefined) {
-                                        anim.keyframes.push(keyframe);
-                                    }
-                                });
-                            });
-
-                            anim.keyframes.sort((a, b) => a.frame - b.frame);
-                            vs_model_json.animations.push(anim);
+                        let animators = []
+                        Object.keys(animation.animators).forEach(key => {
+                            animators.push(animation.animators[key]);
+                        });
+                        let anim = {
+                            name: animation.name,
+                            code: (animation.name).toLowerCase().replace(" ", "_"),
+                            onActivityStopped: "EaseOut",
+                            onAnimationEnd: "Repeat",
+                            quantityframes: (animation.length * 30).toFixed() * 1,
+                            keyframes: [
+                            ],
                         }
+
+                        // loop mode
+                        if (animation.loop === "hold") {
+                            anim.onAnimationEnd = "Hold"
+                        } else if (animation.loop === "once") {
+                            anim.onAnimationEnd = "Stop"
+                        }
+
+                        animators.forEach(animator => {
+                            // keyframes
+                            //gather
+                            let newKfs = [];
+
+                            channels.forEach(channel => {
+                                if (animator.group !== undefined && animator[channel].length > 0) {
+                                    var keyframes_sorted = animator[channel].slice().sort((a, b) => a.time - b.time);
+                                    for (let k = 0; k <= keyframes_sorted.last().time + 0.5; k += snap_time) {
+                                        const timeIndex = Math.trunc(k * 10000) / 10000;
+
+                                        //target kf
+                                        const findingKF = animator[channel].find(kf => getRangeBool(kf.time, timeIndex - .02, timeIndex + .02));
+                                        if (findingKF !== undefined) {
+                                            const tIndex = newKfs.findIndex(e => e.find(f => f.time == findingKF.time));
+
+                                            if (tIndex !== -1) {
+                                                newKfs[tIndex].push(findingKF);
+                                            } else {
+                                                newKfs.push([findingKF]);
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+
+                            newKfs.forEach((frame, indexf) => {
+                                let keyframe = {
+                                    frame: ((frame[0].time * 29).toFixed() * 1),
+                                    elements: {
+                                    }
+                                }
+                                const groupC = [animator.group]
+
+                                for (let g = 0; g < groupC.length; g++) {
+                                    let elemA = {};
+
+                                    if (animator.keyframes.length > 0) {
+                                        frame.forEach(kf => {
+                                            axis.forEach(a => {
+                                                elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()] = kf.data_points[0][a] * 1;
+
+                                                if (kf.channel == "rotation") {
+                                                    elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()] = -elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()];
+                                                }
+                                            });
+                                        });
+                                        // 30 is fps VS uses for anims
+                                        if (anim.keyframes.find(e => e.frame === (frame[0].time * 29).toFixed() * 1) !== undefined) {
+                                            anim.keyframes.find(e => e.frame === (frame[0].time * 29).toFixed() * 1).elements[groupC[g].name] = elemA;
+                                        } else {
+                                            keyframe.elements[groupC[g].name] = elemA;
+                                        }
+                                    }
+                                }
+                                if (anim.keyframes.find(e => e.frame === (frame[0].time * 29).toFixed() * 1) === undefined) {
+                                    anim.keyframes.push(keyframe);
+                                }
+                            });
+                        });
+
+                        anim.keyframes.sort((a, b) => a.frame - b.frame);
+                        vs_model_json.animations.push(anim);
                     }
+
+                    return autoStringify(vs_model_json);
                 },
                 parse(model, path, add) {
-                    console.log("parse")
-                    console.log(model)
-                    console.log(path)
-                    console.log(add)
 
-                    //newProject(Formats.format)
+                    var previous_texture_length = add ? Texture.all.length : 0
+                    var new_cubes = [];
+                    var new_textures = [];
+                    if (add) {
+                        Undo.initEdit({ elements: new_cubes, outliner: true, textures: new_textures })
+                        Project.added_models++;
+                        var import_group = new Group(pathToName(path, false)).init()
+                    }
+
+                    if (model.texture_size instanceof Array && !add) {
+                        Project.texture_width = Math.clamp(parseInt(model.texture_size[0]), 1, Infinity)
+                        Project.texture_height = Math.clamp(parseInt(model.texture_size[1]), 1, Infinity)
+                    }
+
+                    Undo.initEdit({ "elements": [], "uv_only": false, "textures": [] });
+
+                    // Root node
+                    let root_group = new Group({
+                        name: path.name
+                    }).init().addTo();
+
+                    // Resolve textures
+                    var texture_ids = {}
+                    var texture_paths = {}
+                    var path_arr = path.split(osfs)
+                    if (model.textures) {
+
+                        //Select Last Texture
+                        if (Texture.all.length > 0) {
+                            Texture.all.last().select();
+                        }
+                    }
+
+                    // Resolve elements
+                    for (let element of model.elements) {
+                        parseElement(element, root_group. [world_center, world_center, world_center]);
+                    }
+
+                    function parseElement(element, group, origin) {
+                        // Origin
+                        let origin = [origin[0] + element.rotationOrigin[0], origin[1] + element.rotationOrigin[1], origin[2] + element.rotationOrigin[2]];
+
+                        // Rotation
+                        let rotation = [
+                            element.rotationX == undefined ? 0 : element.rotationX,
+                            element.rotationY == undefined ? 0 : element.rotationY,
+                            element.rotationZ == undefined ? 0 : element.rotationZ
+                        ];
+
+                        // From/to
+                        let from = [element.from[0] - world_center, element.from[1], element.from[2] - world_center];
+                        let to = [element.to[0] - world_center, element.to[1], element.to[2] - world_center];
+
+                        // Create cube
+                        let new_cube = new Cube({
+                            name: element.name,
+                            from: from,
+                            to: to,
+                            origin: origin,
+                            rotation: rotation
+                        })
+
+                        // Faces
+                        if (element.faces) {
+                            for (var key in element.faces) {
+
+                                var read_face = element.faces[key];
+                                var new_face = new_cube.faces[key];
+                                if (read_face === undefined) {
+
+                                    new_face.texture = null
+                                    new_face.uv = [0, 0, 0, 0]
+                                } else {
+                                    if (typeof read_face.uv === 'object') {
+
+                                        new_face.uv.forEach((n, i) => {
+                                            new_face.uv[i] = read_face.uv[i] * UVEditor.getResolution(i % 2) / 16;
+                                        })
+                                    }
+                                    if (read_face.texture === '#missing') {
+                                        new_face.texture = false;
+
+                                    } else if (read_face.texture) {
+                                        var id = read_face.texture.replace(/^#/, '')
+                                        var t = texture_ids[id]
+
+                                        if (t instanceof Texture === false) {
+                                            if (texture_paths[read_face.texture]) {
+                                                var t = texture_paths[read_face.texture]
+                                                if (t.id === 'particle') {
+                                                    t.extend({ id: id, name: '#' + id }).loadEmpty(3)
+                                                }
+                                            } else {
+                                                var t = new Texture({ id: id, name: '#' + id }).add(false).loadEmpty(3)
+                                                texture_ids[id] = t
+                                                new_textures.push(t);
+                                            }
+                                        }
+                                        new_face.texture = t.uuid;
+                                    }
+                                    if (typeof read_face.tintindex == 'number') {
+                                        new_face.tint = read_face.tintindex;
+                                    }
+                                }
+                            }
+                        }
+
+                        new_cube.init()
+
+                        // Create groups
+                        if (
+                            element.children != undefined &&
+                            element.children != null &&
+                            element.children.length > 0
+                        ) {
+                            let new_group = new Group().extend({
+                                name: element.name,
+                                origin: origin,
+                                rotation: rotation
+                            }).init().addTo(group);
+
+                            new_cube.addTo(new_group);
+                            /*
+                            if (!(
+                                element.from[0] == 0 && element.from[1] == 0 && element.from[2] == 0 &&
+                                element.to[0] == 0 && element.to[1] == 0 && element.to[2] == 0
+                            )) {                               
+                            }
+                            */
+
+                            for (let child_element of element.children) {
+                                parseElement(child_element, new_group);
+                            }
+                        }
+                        else {
+                            new_cube.addTo(group);
+                        }
+                    }
+
+                    if (add) {
+                        Undo.finishEdit("vsimporter");
+                    }
+                    Validator.validate()
                 }
             });
-
-            format.codec = codec;
 
             import_action = new Action('import_vsmodel', {
                 id: "import_vintagestory",
@@ -295,15 +432,14 @@
                 category: 'file',
                 click() {
                     Blockbench.import({
-                        extensions: ['json'],
                         type: 'Vintage Story Shape',
+                        extensions: ['json'],
+                        type: codec.name,
                         readtype: 'text',
-                        resource_id: 'vintagestory_files'
                     }, files => {
-                        vsname = files[0].name.replace(".json", "");
-                        Project.name = vsname;
-                        Project.model_identifier = vsname;
-                        codec.parse(files[0].content, files[0]);
+                        files.forEach(file => {
+                            codec.parse(autoParseJSON(file.content), file.path, true)
+                        })
                     })
                 }
             })
@@ -311,19 +447,12 @@
             export_action = new Action('export_vsmodel', {
                 id: "export_vintagestory",
                 name: 'Export Vintage Story Shape',
+                type: codec.name,
                 icon: 'park',
                 category: 'file',
                 condition: () => { return Format.id == format.id },
                 click() {
-                    //codec.export();
-                    Blockbench.export({
-                        resource_id: 'vintagestory_files',
-                        type: 'Vintage Story Shape',
-                        extensions: ['json'],
-                        name: 'animation',
-                        content: content,
-                        savetype: 'text'
-                    });
+                    codec.export()
                 }
             });
 

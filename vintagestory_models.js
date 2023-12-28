@@ -11,7 +11,7 @@
         variant: "both",
         onload() {
             exportVsAction = new Action("exportVsModel", {
-                name: "Export Vintage Story Shape",
+                name: "Export Vintage Story Model",
                 icon: "park",
                 click: function () {
 					console.log("export vintagestory_format")
@@ -243,7 +243,7 @@
                     Blockbench.export({
                         type: 'VintageStory Model',
                         extensions: ['json'],
-                        name: (Project.name !== '' ? Project.name : "shape"),
+                        name: (Project.name !== '' ? Project.name : "model"),
                         content: autoStringify(vs_model_json),
                         savetype: 'json'
                     });
@@ -251,7 +251,7 @@
             });
 
             importVsAction = new Action("importVsModel", {
-                name: "Import Vintage Story Shape",
+                name: "Import Vintage Story Model",
                 icon: "park",
                 click: function () {
                     const world_center = Format.name === "Java Block/Item" ? 0 : 8;
@@ -308,8 +308,6 @@
                                     {
                                         let new_cube = new Cube({
                                             name: element.name,
-                                            // from: [from[0] - origin[0], from[1] - origin[1], from[2] - origin[2]],
-                                            // to: [to[0] - origin[0], to[1] - origin[1], to[2] - origin[2]]   
                                             from: from,
                                             to: to,
                                             origin: origin,
