@@ -1,7 +1,12 @@
 (function () {
     var codec;
+
     var import_action;
     var export_action;
+
+    var setting_gamepath;
+
+    const world_center = 8;
 
     BBPlugin.register('vintagestory', {
         title: "Vintage Story",
@@ -15,7 +20,13 @@
         await_loading: true,
         creation_date: "2023-12-22",
         onload() {
-            const world_center = 8;
+            setting_gamepath = new Setting('vs_gamepath', {
+                name: 'Vintage Story game folder',
+                description: 'Set this to the install path',
+                category: 'defaults',
+                value: process.env.APPDATA.replaceAll('\\', '/') + '/Vintagestory',
+                type: 'text',
+            });
 
             var format = new ModelFormat('vintagestory', {
                 id: "vintagestorymodel",
@@ -48,7 +59,7 @@
                 show_on_start_screen: true,
                 single_texture: false,
                 target: ['Vintage Story'],
-                texture_folder: false,
+                texture_folder: true,
                 texture_meshes: false,
                 uv_rotation: true,
                 vertex_color_ambient_occlusion: false,
@@ -98,7 +109,7 @@
                             }
 
                             eval(`vs_model_json.textureSizes["${Project.textures[i].id}"] = [${Project.textures[i].width}, ${Project.textures[i].height}]`);
-                            vs_model_json.textures[Project.textures[i].id] = Project.textures[i].namespace + NSS + Project.textures[i].folder + TFS + Project.textures[i].name.replace(".png", "");
+                            vs_model_json.textures[Project.textures[i].id] = Project.textures[i].namespace.replace("survival","game") + NSS + Project.textures[i].folder + TFS + Project.textures[i].name.replace(".png", "");
                         }
                     }
 
@@ -294,11 +305,10 @@
                     var texture_ids = {}
                     if (model.textures) {
                         for (var key in model.textures) {
-                            // TODO: namespace settings dialog
                             namespace = {}
                             namespace[""] = path + "../textures"
-                            namespace["game"] = "C:/Users/spooo/AppData/Roaming/Vintagestory/assets/survival/textures"
-                            namespace["youvegotmail"] = "C:/Users/spooo/source/repos/youvegotmail/youvegotmail/assets/youvegotmail/textures/"
+                            namespace["game"] = settings.vs_gamepath.value + "/assets/survival/textures"
+                            //namespace["youvegotmail"] = "C:/Users/spooo/source/repos/youvegotmail/youvegotmail/assets/youvegotmail/textures/"
 
                             var texture = new Texture().add()
                             texture.id = key
@@ -309,6 +319,9 @@
                             if (spaces.length > 1) {
                                 texture.namespace = spaces[0]
                                 link = spaces[1]
+                                if (link == "survival") {
+                                    link = "game"
+                                }
                             }
                             else {
                                 texture.namespace = "";
@@ -460,8 +473,11 @@
         onunload() {
             codec.format.delete();
             codec.delete();
+
             import_action.delete()
             export_action.delete()
+
+            setting_gamepath.delete()
         }
     })
 })()
