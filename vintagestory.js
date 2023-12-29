@@ -411,11 +411,14 @@
                         let to = [element.to[0] + parentPositionOrigin[0], element.to[1] + parentPositionOrigin[1], element.to[2] + parentPositionOrigin[2]];
 
                         // Rotation origin
-                        let rotationOrigin = [
-                            element.rotationOrigin[0],
-                            element.rotationOrigin[1],
-                            element.rotationOrigin[2]
-                        ];
+                        let rotationOrigin = [0, 0, 0]
+                        if (element.rotationOrigin) {
+                            rotationOrigin = [
+                                element.rotationOrigin[0],
+                                element.rotationOrigin[1],
+                                element.rotationOrigin[2]
+                            ];
+                        }
 
                         // Rotation
                         let rotation = [
