@@ -39,9 +39,9 @@
                 animation_files: false,
                 animation_mode: true,
                 bone_binding_expression: false,
-                bone_rig: false,
+                bone_rig: true,
                 box_uv: false,
-                category: 'low_poly',
+                category: 'general',
                 centered_grid: true,
                 display_mode: false,
                 edit_mode: true,
@@ -170,6 +170,7 @@
                         else if (obj.type == "group") {
                             // TODO: check for child cube with the same name so it can be collapsed
 
+                            console.log("group")
                             let element = {
                                 name: obj.name,
                                 from: [0, 0, 0],
@@ -198,6 +199,7 @@
                     }
 
                     //Animation
+                    console.log("animation")
                     for (let i = 0; i < Animation.all.length; i++) {
                         let animation = Animation.all[i];
 
@@ -263,7 +265,10 @@
                                     if (animator.keyframes.length > 0) {
                                         frame.forEach(kf => {
                                             axis.forEach(a => {
-                                                elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()] = kf.data_points[0][a] * 1;
+                                                var mult = 1;
+                                                if (a == "x")
+                                                    mult = -1;
+                                                elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()] = kf.data_points[0][a] * mult;
 
                                                 if (kf.channel == "rotation") {
                                                     elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()] = -elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()];
@@ -527,4 +532,9 @@
             autosettings.forEach(setting => { setting.delete() })
         }
     })
+
+
+    function getRangeBool(x, min, max) {
+        return x >= min && x <= max;
+    }
 })()

@@ -2,14 +2,12 @@
 	"textureWidth": 16,
 	"textureHeight": 16,
 	"textureSizes": {
-		"test2": [32, 32],
-		"letter1": [32, 32],
-		"test": [32, 32]
+		"test2": [16, 16],
+		"letter1": [16, 16]
 	},
 	"textures": {
 		"test2": "anothermod:block/bbtest/bbtest",
-		"letter1": "game:block/clay/hardened/red1",
-		"test": "block/bbtest/bbtest"
+		"letter1": "game:block/clay/hardened/red1"
 	},
 	"elements": [
 		{
@@ -77,9 +75,9 @@
 					},
 					"children": [
 						{
-							"name": "Cube3",
-							"from": [0, 3, 0],
-							"to": [1, 4, 1],
+							"name": "smallzero",
+							"from": [8, 0, 8],
+							"to": [9, 1, 9],
 							"rotationOrigin": [8, 4, 8],
 							"rotationX": 0,
 							"rotationY": 0,
@@ -112,9 +110,9 @@
 							}
 						},
 						{
-							"name": "Cube2",
-							"from": [0, 0, 0],
-							"to": [3, 3, 3],
+							"name": "large15",
+							"from": [9, 0, 13],
+							"to": [12, 3, 16],
 							"rotationOrigin": [12, 0, 16],
 							"rotationX": 0,
 							"rotationY": 0,
@@ -157,5 +155,35 @@
 			"rotationZ": 0
 		}
 	],
-	"animations": []
+	"animations": [
+		{
+			"name": "move",
+			"code": "move",
+			"onActivityStopped": "EaseOut",
+			"onAnimationEnd": "Stop",
+			"quantityframes": 30,
+			"keyframes": [
+				{
+					"frame": 0,
+					"elements": {
+						"Cube2": {
+							"offsetX": 0,
+							"offsetY": 0,
+							"offsetZ": 0
+						}
+					}
+				},
+				{
+					"frame": 29,
+					"elements": {
+						"Cube2": {
+							"offsetX": -1,
+							"offsetY": 1,
+							"offsetZ": 1
+						}
+					}
+				}
+			]
+		}
+	]
 }
