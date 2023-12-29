@@ -266,13 +266,14 @@
                                         frame.forEach(kf => {
                                             axis.forEach(a => {
                                                 var mult = 1;
-                                                if (a == "x")
-                                                    mult = -1;
-                                                elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()] = kf.data_points[0][a] * mult;
 
-                                                if (kf.channel == "rotation") {
-                                                    elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()] = -elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()];
-                                                }
+                                                if (kf.channel == "position" && a == "x")
+                                                    mult = -1;
+
+                                                if (kf.channel == "rotation" && a != "z")
+                                                    mult = -1
+
+                                                elemA[kf.channel.replace("position", "offset").replace("scale", "stretch") + a.toUpperCase()] = kf.data_points[0][a] * mult;
                                             });
                                         });
                                         // 30 is fps VS uses for anims

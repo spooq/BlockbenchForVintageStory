@@ -2,16 +2,16 @@
 	"textureWidth": 16,
 	"textureHeight": 16,
 	"textureSizes": {
-		"1": [32, 32],
-		"letter1": [32, 32]
+		"test2": [16, 16],
+		"letter1": [16, 16]
 	},
 	"textures": {
-		"1": "game:block/clay/hardened/red2",
+		"test2": "anothermod:block/bbtest/bbtest",
 		"letter1": "game:block/clay/hardened/red1"
 	},
 	"elements": [
 		{
-			"name": "group",
+			"name": "test2",
 			"from": [0, 0, 0],
 			"to": [0, 0, 0],
 			"rotationOrigin": [8, 0, 8],
@@ -43,37 +43,109 @@
 			},
 			"children": [
 				{
-					"name": "cube",
+					"name": "Cube2",
+					"from": [0, 0, 0],
+					"to": [0, 0, 0],
+					"rotationOrigin": [12, 0, 16],
+					"faces": {
+						"north": {
+							"texture": "#null",
+							"uv": [0, 0, 0, 0]
+						},
+						"east": {
+							"texture": "#null",
+							"uv": [0, 0, 0, 0]
+						},
+						"south": {
+							"texture": "#null",
+							"uv": [0, 0, 0, 0]
+						},
+						"west": {
+							"texture": "#null",
+							"uv": [0, 0, 0, 0]
+						},
+						"up": {
+							"texture": "#null",
+							"uv": [0, 0, 0, 0]
+						},
+						"down": {
+							"texture": "#null",
+							"uv": [0, 0, 0, 0]
+						}
+					},
+					"children": [
+						{
+							"name": "large15",
+							"from": [9, 0, 13],
+							"to": [12, 3, 16],
+							"rotationOrigin": [12, 0, 16],
+							"rotationX": 0,
+							"rotationY": 0,
+							"rotationZ": 0,
+							"faces": {
+								"north": {
+									"texture": "#test2",
+									"uv": [0, 0, 3, 3]
+								},
+								"east": {
+									"texture": "#test2",
+									"uv": [0, 0, 3, 3]
+								},
+								"south": {
+									"texture": "#test2",
+									"uv": [0, 0, 3, 3]
+								},
+								"west": {
+									"texture": "#test2",
+									"uv": [0, 0, 3, 3]
+								},
+								"up": {
+									"texture": "#test2",
+									"uv": [0, 0, 3, 3]
+								},
+								"down": {
+									"texture": "#test2",
+									"uv": [0, 0, 3, 3]
+								}
+							}
+						}
+					],
+					"rotationX": 0,
+					"rotationY": 0,
+					"rotationZ": 0
+				},
+				{
+					"name": "smallzero",
 					"from": [8, 0, 8],
-					"to": [10, 2, 10],
-					"rotationOrigin": [8, 0, 8],
+					"to": [9, 1, 9],
+					"rotationOrigin": [8, 4, 8],
 					"rotationX": 0,
 					"rotationY": 0,
 					"rotationZ": 0,
 					"faces": {
 						"north": {
 							"texture": "#null",
-							"uv": [0, 0, 2, 2]
+							"uv": [5, 4, 12, 11]
 						},
 						"east": {
 							"texture": "#null",
-							"uv": [0, 0, 2, 2]
+							"uv": [0, 0, 1, 1]
 						},
 						"south": {
-							"texture": "#null",
-							"uv": [0, 0, 2, 2]
+							"texture": "#letter1",
+							"uv": [6.5, 2.5, 7.5, 3.5]
 						},
 						"west": {
 							"texture": "#null",
-							"uv": [0, 0, 2, 2]
+							"uv": [0, 0, 1, 1]
 						},
 						"up": {
-							"texture": "#null",
-							"uv": [0, 0, 2, 2]
+							"texture": "#letter1",
+							"uv": [0, 0, 1, 1]
 						},
 						"down": {
 							"texture": "#null",
-							"uv": [0, 0, 2, 2]
+							"uv": [0, 0, 1, 1]
 						}
 					}
 				}
@@ -90,7 +162,38 @@
 			"onActivityStopped": "EaseOut",
 			"onAnimationEnd": "Stop",
 			"quantityframes": 30,
-			"keyframes": []
+			"keyframes": [
+				{
+					"frame": 0,
+					"elements": {
+						"test2": {
+							"offsetX": 0,
+							"offsetY": 0,
+							"offsetZ": 0
+						},
+						"Cube2": {
+							"rotationX": 0,
+							"rotationY": 0,
+							"rotationZ": 0
+						}
+					}
+				},
+				{
+					"frame": 29,
+					"elements": {
+						"test2": {
+							"offsetX": 1,
+							"offsetY": 0,
+							"offsetZ": 0
+						},
+						"Cube2": {
+							"rotationX": 0,
+							"rotationY": 0,
+							"rotationZ": 45
+						}
+					}
+				}
+			]
 		}
 	]
 }
