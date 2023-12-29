@@ -9,8 +9,6 @@
     var autosettings = [];
     var namespace = {}
 
-    const world_center = 8;
-
     BBPlugin.register('vintagestory', {
         title: "Vintage Story",
         author: "Crabb",
@@ -127,9 +125,9 @@
                         if (obj.type === "cube") {
                             let element = {
                                 name: obj.name,
-                                from: [obj.from[0] + world_center, obj.from[1], obj.from[2] + world_center],
-                                to: [obj.to[0] + world_center, obj.to[1], obj.to[2] + world_center],
-                                rotationOrigin: [obj.origin[0] + world_center, obj.origin[1], obj.origin[2] + world_center],
+                                from: [obj.from[0], obj.from[1], obj.from[2]],
+                                to: [obj.to[0], obj.to[1], obj.to[2]],
+                                rotationOrigin: [obj.origin[0], obj.origin[1], obj.origin[2]],
                                 rotationX: obj.rotation[0],
                                 rotationY: obj.rotation[1],
                                 rotationZ: obj.rotation[2],
@@ -170,12 +168,11 @@
                         else if (obj.type == "group") {
                             // TODO: check for child cube with the same name so it can be collapsed
 
-                            console.log("group")
                             let element = {
                                 name: obj.name,
                                 from: [0, 0, 0],
                                 to: [0, 0, 0],
-                                rotationOrigin: [obj.origin[0] + world_center, obj.origin[1], obj.origin[2] + world_center],
+                                rotationOrigin: [obj.origin[0], obj.origin[1], obj.origin[2]],
                                 faces: {
                                     north: { texture: "#null", uv: [0, 0, 0, 0] },
                                     east: { texture: "#null", uv: [0, 0, 0, 0] },
@@ -199,7 +196,6 @@
                     }
 
                     //Animation
-                    console.log("animation")
                     for (let i = 0; i < Animation.all.length; i++) {
                         let animation = Animation.all[i];
 
@@ -398,7 +394,7 @@
 
                     // Resolve elements
                     for (let element of model.elements) {
-                        parseElement(element, root_group, [-world_center, 0, -world_center], new_elements, new_textures);
+                        parseElement(element, root_group, [0, 0, 0], new_elements, new_textures);
                     }
 
                     function parseElement(element, group, parentPositionOrigin, new_elements, new_textures) {
