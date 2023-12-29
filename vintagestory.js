@@ -180,6 +180,7 @@
                                 return;
 
                             // TODO: check for child cube with the same name so it can be collapsed
+                            // or just take the first cube, it doesnt matter?
 
                             let element = {
                                 name: obj.name,
@@ -395,6 +396,35 @@
                         parseElement(element, root_group, [0, 0, 0], new_elements, new_textures);
                     }
 
+                    // Read animations
+                    for (let modelAni of model.animations) {
+                        var newAnimation = new Animation()
+                        newAnimation.name = modelAni.name
+                        newAnimation.length = modelAni.quantityframes / 30
+                        if (modelAni.onAnimationEnd === "Stop")
+                            newAnimation.loop = "once"
+                        else if (modelAni.onAnimationEnd === "Hold")
+                            newAnimation.loop = "hold"
+
+                        let mapNameToGuid = {}
+
+                        for (let modelKf of modelAni.keyframes) {
+                            var frame = modelKf.frame;
+                            Object.keys(modelKf.elements).forEach((bonename) => {
+                                if (mapNameToGuid[bonename] == undefined) {
+                                    console.log("adding new boneanimator " + bonename + " to " + newAnimation.name)
+                                    let uuid = guid();
+                                    var boneAnimator = new BoneAnimator(uuid, newAnimation, bonename)
+                                    newAnimation.animators[uuid] = boneAnimator
+
+                                    mapNameToGuid[bonename] = uuid
+                                }
+                            })
+                        }
+
+                        newAnimation.add()
+                    }
+
                     function parseElement(element, group, parentPositionOrigin, new_elements, new_textures) {
                         // From/to
                         let from = [element.from[0] + parentPositionOrigin[0], element.from[1] + parentPositionOrigin[1], element.from[2] + parentPositionOrigin[2]];
@@ -444,13 +474,7 @@
                             }
                         }
 
-                        console.log("import cube " + element.name
-                                 + " children " + hasChildren
-                                 + " zero size " + isZeroSize)
-
-                        // Don't always bother creating a child cube for each group.
-                        // If there are no children or the cube is a dummy anyway, ignore it.
-                        // Animations will go straight on the group anyway.
+                        // If the cube is a dummy for animations, ignore it.
                         if (!isZeroSize) {
                             // Create cube
                             let new_cube = new Cube({
