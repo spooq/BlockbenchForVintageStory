@@ -2,19 +2,19 @@
 	"textureWidth": 16,
 	"textureHeight": 16,
 	"textureSizes": {
-		"woodvar": [32, 32],
-		"metalvar": [32, 32]
+		"clay": [32, 32],
+		"metal": [32, 32]
 	},
 	"textures": {
-		"woodvar": "game:block/clay/hardened/wood",
-		"metalvar": "game:block/clay/hardened/metal"
+		"clay": "game:block/clay/hardened/red1",
+		"metal": "game:block/metal/plate/bismuth"
 	},
 	"elements": [
 		{
 			"name": "test2",
 			"from": [0, 0, 0],
 			"to": [0, 0, 0],
-			"rotationOrigin": [8, 0, 8],
+			"rotationOrigin": [0, 0, 0],
 			"faces": {
 				"north": {
 					"texture": "#null",
@@ -46,7 +46,7 @@
 					"name": "Cube2",
 					"from": [0, 0, 0],
 					"to": [0, 0, 0],
-					"rotationOrigin": [12, 0, 16],
+					"rotationOrigin": [4, 0, 8],
 					"faces": {
 						"north": {
 							"texture": "#null",
@@ -76,83 +76,106 @@
 					"children": [
 						{
 							"name": "large15",
-							"from": [9, 0, 13],
-							"to": [12, 3, 16],
-							"rotationOrigin": [12, 0, 16],
-							"rotationX": 0,
-							"rotationY": 0,
-							"rotationZ": 0,
+							"from": [1, 0, 5],
+							"to": [4, 3, 8],
+							"rotationOrigin": [4, 0, 8],
 							"faces": {
 								"north": {
-									"texture": "#woodvar",
+									"texture": "#metal",
 									"uv": [0, 0, 3, 3]
 								},
 								"east": {
-									"texture": "#woodvar",
+									"texture": "#metal",
 									"uv": [0, 0, 3, 3]
 								},
 								"south": {
-									"texture": "#woodvar",
+									"texture": "#metal",
 									"uv": [0, 0, 3, 3]
 								},
 								"west": {
-									"texture": "#woodvar",
+									"texture": "#metal",
 									"uv": [0, 0, 3, 3]
 								},
 								"up": {
-									"texture": "#woodvar",
-									"uv": [0, 0, 3, 3]
+									"texture": "#metal",
+									"uv": [0, 0, 16, 16]
 								},
 								"down": {
-									"texture": "#woodvar",
+									"texture": "#metal",
 									"uv": [0, 0, 3, 3]
 								}
 							}
 						}
 					],
-					"rotationX": 0,
-					"rotationY": 0,
-					"rotationZ": 0
+					"rotationY": -17.5
 				},
 				{
 					"name": "smallzero",
-					"from": [8, 0, 8],
-					"to": [9, 1, 9],
-					"rotationOrigin": [8, 4, 8],
-					"rotationX": 0,
-					"rotationY": 0,
-					"rotationZ": 0,
+					"from": [0, 0, 0],
+					"to": [1, 1, 1],
+					"rotationOrigin": [0, 4, 0],
 					"faces": {
 						"north": {
-							"texture": "#metalvar",
+							"texture": "#clay",
 							"uv": [5, 4, 12, 11]
 						},
 						"east": {
-							"texture": "#metalvar",
+							"texture": "#clay",
 							"uv": [0, 0, 1, 1]
 						},
 						"south": {
-							"texture": "#metalvar",
+							"texture": "#clay",
 							"uv": [6.5, 2.5, 7.5, 3.5]
 						},
 						"west": {
-							"texture": "#metalvar",
+							"texture": "#clay",
 							"uv": [0, 0, 1, 1]
 						},
 						"up": {
-							"texture": "#metalvar",
+							"texture": "#clay",
 							"uv": [0, 0, 1, 1]
 						},
 						"down": {
-							"texture": "#metalvar",
+							"texture": "#clay",
 							"uv": [0, 0, 1, 1]
 						}
-					}
+					},
+					"rotationX": -32.5
 				}
-			],
-			"rotationX": 0,
-			"rotationY": 0,
-			"rotationZ": 0
+			]
+		},
+		{
+			"name": "newtest_vsmc",
+			"from": [0, 0, 0],
+			"to": [0, 0, 0],
+			"rotationOrigin": [0, 0, 0],
+			"faces": {
+				"north": {
+					"texture": "#null",
+					"uv": [0, 0, 0, 0]
+				},
+				"east": {
+					"texture": "#null",
+					"uv": [0, 0, 0, 0]
+				},
+				"south": {
+					"texture": "#null",
+					"uv": [0, 0, 0, 0]
+				},
+				"west": {
+					"texture": "#null",
+					"uv": [0, 0, 0, 0]
+				},
+				"up": {
+					"texture": "#null",
+					"uv": [0, 0, 0, 0]
+				},
+				"down": {
+					"texture": "#null",
+					"uv": [0, 0, 0, 0]
+				}
+			},
+			"children": []
 		}
 	],
 	"animations": [

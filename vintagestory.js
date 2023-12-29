@@ -15,7 +15,7 @@
         icon: "park",
         description: "Vintage Story",
         tags: ["Vintage Story"],
-        version: "0.0.1",
+        version: "1.0.1",
         min_version: "4.9.2",
         variant: "both",
         await_loading: true,
@@ -170,6 +170,15 @@
                             elements.push(element);
                         }
                         else if (obj.type == "group") {
+                            // Don't export empty groups
+                            var hasChildren =
+                                obj.children != undefined &&
+                                obj.children != null &&
+                                obj.children.length > 0;
+                                
+                            if (!hasChildren)
+                                return;
+
                             // TODO: check for child cube with the same name so it can be collapsed
 
                             let element = {
@@ -355,13 +364,17 @@
                             var spaces = link.split(':')
                             if (spaces.length > 1) {
                                 texture.namespace = spaces[0]
+
+                                // Just a sanity-check
                                 if (texture.namespace == "survival") {
                                     texture.namespace = "game"
                                 }
 
                                 link = spaces[1]
 
-                                // New namespace found, make a setting for it
+                                // New namespace found, make a setting for it.
+                                // This does not persist.
+                                /*
                                 if (!namespace[texture.namespace]) {
                                     console.log("texture.namespace => " + texture.namespace)
                                     namespace[texture.namespace] = namespace[""]
@@ -375,6 +388,7 @@
                                         onchange: (value) => { namespace[texture.namespace] = value; console.log("updated") }
                                     }));
                                 }
+                                */
                             }
                             else {
                                 texture.namespace = ""
@@ -427,13 +441,20 @@
                             element.rotationZ == undefined ? 0 : element.rotationZ
                         ];
 
-                        // Create group and descend children if required
-                        var parent_group = group;
-                        if (
+                        // Check for children
+                        var hasChildren =
                             element.children != undefined &&
                             element.children != null &&
-                            element.children.length > 0
-                        ) {
+                            element.children.length > 0;
+
+                        var isZeroSize =
+                            from[0] == to[0] &&
+                            from[1] == to[1] &&
+                            from[2] == to[2];
+
+                        // Create group and descend children if required
+                        var parent_group = group;
+                        if (hasChildren) {
                             parent_group = new Group().extend({
                                 name: element.name,
                                 origin: rotationOrigin,
@@ -447,45 +468,54 @@
                             }
                         }
 
-                        // Create cube
-                        let new_cube = new Cube({
-                            name: element.name,
-                            from: from,
-                            to: to,
-                            origin: rotationOrigin,
-                            rotation: rotation
-                        })
+                        console.log("import cube " + element.name
+                                 + " children " + hasChildren
+                                + " zero size " + isZeroSize)
 
-                        // Faces
-                        if (element.faces) {
-                            for (var key in element.faces) {
-                                var read_face = element.faces[key];
-                                var new_face = new_cube.faces[key];
-                                if (read_face === undefined) {
-                                    new_face.texture = null
-                                    new_face.uv = [0, 0, 0, 0]
-                                } else {
-                                    if (typeof read_face.uv === 'object') {
-                                        new_face.uv.forEach((n, i) => {
-                                            new_face.uv[i] = read_face.uv[i] * UVEditor.getResolution(i % 2) / 16;
-                                        })
-                                    }
-                                    if (read_face.texture === '#null') {
-                                        new_face.texture = false;
-                                    } else if (read_face.texture) {
-                                        var id = read_face.texture.replace(/^#/, '')
-                                        if (texture_ids[id])
-                                            new_face.texture = texture_ids[id].uuid;
-                                        else
-                                            console.log("Cannot resolve texture id " + id)
+                        // Don't always bother creating a child cube for each group.
+                        // If there are no children or the cube is a dummy anyway, ignore it.
+                        // Animations will go straight on the group anyway.
+                        if (!isZeroSize) {
+                            // Create cube
+                            let new_cube = new Cube({
+                                name: element.name,
+                                from: from,
+                                to: to,
+                                origin: rotationOrigin,
+                                rotation: rotation
+                            })
+
+                            // Faces
+                            if (element.faces) {
+                                for (var key in element.faces) {
+                                    var read_face = element.faces[key];
+                                    var new_face = new_cube.faces[key];
+                                    if (read_face === undefined) {
+                                        new_face.texture = null
+                                        new_face.uv = [0, 0, 0, 0]
+                                    } else {
+                                        if (typeof read_face.uv === 'object') {
+                                            new_face.uv.forEach((n, i) => {
+                                                new_face.uv[i] = read_face.uv[i] * UVEditor.getResolution(i % 2) / 16;
+                                            })
+                                        }
+                                        if (read_face.texture === '#null') {
+                                            new_face.texture = false;
+                                        } else if (read_face.texture) {
+                                            var id = read_face.texture.replace(/^#/, '')
+                                            if (texture_ids[id])
+                                                new_face.texture = texture_ids[id].uuid;
+                                            else
+                                                console.log("Cannot resolve texture id " + id)
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        // Done
-                        new_cube.init().addTo(parent_group)
-                        new_elements.push(new_cube)
+                            // Done
+                            new_cube.init().addTo(parent_group)
+                            new_elements.push(new_cube)
+                        }
                     }
                     
                     //Undo.finishEdit("vsimporter")//, { "elements": new_elements, "textures": new_textures });
@@ -540,7 +570,6 @@
             autosettings.forEach(setting => { setting.delete() })
         }
     })
-
 
     function getRangeBool(x, min, max) {
         return x >= min && x <= max;
