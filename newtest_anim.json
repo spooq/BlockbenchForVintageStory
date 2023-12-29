@@ -2,12 +2,12 @@
 	"textureWidth": 16,
 	"textureHeight": 16,
 	"textureSizes": {
-		"test2": [16, 16],
-		"letter1": [16, 16]
+		"woodvar": [32, 32],
+		"metalvar": [32, 32]
 	},
 	"textures": {
-		"test2": "anothermod:block/bbtest/bbtest",
-		"letter1": "game:block/clay/hardened/red1"
+		"woodvar": "game:block/clay/hardened/wood",
+		"metalvar": "game:block/clay/hardened/metal"
 	},
 	"elements": [
 		{
@@ -84,27 +84,27 @@
 							"rotationZ": 0,
 							"faces": {
 								"north": {
-									"texture": "#test2",
+									"texture": "#woodvar",
 									"uv": [0, 0, 3, 3]
 								},
 								"east": {
-									"texture": "#test2",
+									"texture": "#woodvar",
 									"uv": [0, 0, 3, 3]
 								},
 								"south": {
-									"texture": "#test2",
+									"texture": "#woodvar",
 									"uv": [0, 0, 3, 3]
 								},
 								"west": {
-									"texture": "#test2",
+									"texture": "#woodvar",
 									"uv": [0, 0, 3, 3]
 								},
 								"up": {
-									"texture": "#test2",
+									"texture": "#woodvar",
 									"uv": [0, 0, 3, 3]
 								},
 								"down": {
-									"texture": "#test2",
+									"texture": "#woodvar",
 									"uv": [0, 0, 3, 3]
 								}
 							}
@@ -124,27 +124,27 @@
 					"rotationZ": 0,
 					"faces": {
 						"north": {
-							"texture": "#null",
+							"texture": "#metalvar",
 							"uv": [5, 4, 12, 11]
 						},
 						"east": {
-							"texture": "#null",
+							"texture": "#metalvar",
 							"uv": [0, 0, 1, 1]
 						},
 						"south": {
-							"texture": "#letter1",
+							"texture": "#metalvar",
 							"uv": [6.5, 2.5, 7.5, 3.5]
 						},
 						"west": {
-							"texture": "#null",
+							"texture": "#metalvar",
 							"uv": [0, 0, 1, 1]
 						},
 						"up": {
-							"texture": "#letter1",
+							"texture": "#metalvar",
 							"uv": [0, 0, 1, 1]
 						},
 						"down": {
-							"texture": "#null",
+							"texture": "#metalvar",
 							"uv": [0, 0, 1, 1]
 						}
 					}
