@@ -110,7 +110,7 @@
                             }
 
                             eval(`vs_model_json.textureSizes["${Project.textures[i].id}"] = [${Project.textures[i].width}, ${Project.textures[i].height}]`);
-                            vs_model_json.textures[Project.textures[i].id] = Project.textures[i].namespace.replace("survival","game") + NSS + Project.textures[i].folder + TFS + Project.textures[i].name.replace(".png", "");
+                            vs_model_json.textures[Project.textures[i].id] = Project.textures[i].namespace.replace("survival", "game") + NSS + Project.textures[i].folder + TFS + Project.textures[i].name.replace(".png", "");
                         }
                     }
 
@@ -175,7 +175,7 @@
                                 obj.children != undefined &&
                                 obj.children != null &&
                                 obj.children.length > 0;
-                                
+
                             if (!hasChildren)
                                 return;
 
@@ -374,7 +374,7 @@
                             // Load texture
                             var fullPath = "file:///" + namespace[texture.namespace] + "/" + link + ".png"
                             texture = texture.fromPath(fullPath)
-                            
+
                             // Find folder
                             var pathArr = link.split('/')
                             pathArr.pop()
@@ -406,18 +406,37 @@
                         else if (modelAni.onAnimationEnd === "Hold")
                             newAnimation.loop = "hold"
 
-                        let mapNameToGuid = {}
+                        let boneAnimators = {}
 
                         for (let modelKf of modelAni.keyframes) {
-                            var frame = modelKf.frame;
                             Object.keys(modelKf.elements).forEach((bonename) => {
-                                if (mapNameToGuid[bonename] == undefined) {
+
+                                var boneAnimator = boneAnimators[bonename]
+                                if (boneAnimator == undefined) {
                                     console.log("adding new boneanimator " + bonename + " to " + newAnimation.name)
                                     let uuid = guid();
-                                    var boneAnimator = new BoneAnimator(uuid, newAnimation, bonename)
+                                    boneAnimator = new BoneAnimator(uuid, newAnimation, bonename)
+                                    boneAnimators[bonename] = boneAnimator
                                     newAnimation.animators[uuid] = boneAnimator
+                                }
+                                else {
+                                    console.log("already exists")
+                                }
 
-                                    mapNameToGuid[bonename] = uuid
+                                var modelBone = modelKf.elements[bonename]
+                                if (modelBone.offsetX != undefined) {
+                                    boneAnimator.addKeyframe({
+                                        time: modelKf.frame,
+                                        channel: "position",
+                                        data_points: [ { "x": modelBone.offsetX, "y": modelBone.offsetY, "z": modelBone.offsetZ } ]
+                                    }, guid())
+                                }
+                                if (modelBone.rotationX != undefined) {
+                                    boneAnimator.addKeyframe({
+                                        time: modelKf.frame,
+                                        channel: "rotation",
+                                        data_points: [ { "x": modelBone.rotationX, "y": modelBone.rotationY, "z": modelBone.rotationZ } ]
+                                    }, guid())
                                 }
                             })
                         }
@@ -517,7 +536,7 @@
                             new_elements.push(new_cube)
                         }
                     }
-                    
+
                     //Undo.finishEdit("vsimporter")//, { "elements": new_elements, "textures": new_textures });
                     Validator.validate()
                 }
