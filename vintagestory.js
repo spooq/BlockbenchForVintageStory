@@ -364,31 +364,7 @@
                             var spaces = link.split(':')
                             if (spaces.length > 1) {
                                 texture.namespace = spaces[0]
-
-                                // Just a sanity-check
-                                if (texture.namespace == "survival") {
-                                    texture.namespace = "game"
-                                }
-
                                 link = spaces[1]
-
-                                // New namespace found, make a setting for it.
-                                // This does not persist.
-                                /*
-                                if (!namespace[texture.namespace]) {
-                                    console.log("texture.namespace => " + texture.namespace)
-                                    namespace[texture.namespace] = namespace[""]
-
-                                    autosettings.push(new Setting('vs_namespace_' + texture.namespace, {
-                                        name: 'Vintage Story ' + texture.namespace + ' folder',
-                                        description: 'Unzip the mod folder and set this path to the assets/mod/textures folder',
-                                        category: 'defaults',
-                                        value: namespace[texture.namespace],
-                                        type: 'text',
-                                        onchange: (value) => { namespace[texture.namespace] = value; console.log("updated") }
-                                    }));
-                                }
-                                */
                             }
                             else {
                                 texture.namespace = ""
@@ -470,7 +446,7 @@
 
                         console.log("import cube " + element.name
                                  + " children " + hasChildren
-                                + " zero size " + isZeroSize)
+                                 + " zero size " + isZeroSize)
 
                         // Don't always bother creating a child cube for each group.
                         // If there are no children or the cube is a dummy anyway, ignore it.
