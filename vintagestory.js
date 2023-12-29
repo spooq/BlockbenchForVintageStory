@@ -128,9 +128,6 @@
                                 from: [obj.from[0], obj.from[1], obj.from[2]],
                                 to: [obj.to[0], obj.to[1], obj.to[2]],
                                 rotationOrigin: [obj.origin[0], obj.origin[1], obj.origin[2]],
-                                rotationX: obj.rotation[0],
-                                rotationY: obj.rotation[1],
-                                rotationZ: obj.rotation[2],
                                 faces: {
                                     north: { texture: "#null", uv: [0, 0, 0, 0] },
                                     east: { texture: "#null", uv: [0, 0, 0, 0] },
@@ -140,6 +137,13 @@
                                     down: { texture: "#null", uv: [0, 0, 0, 0] }
                                 },
                             };
+
+                            if (obj.rotation[0] != 0)
+                                element.rotationX = obj.rotation[0]
+                            if (obj.rotation[1] != 0)
+                                element.rotationY = obj.rotation[1]
+                            if (obj.rotation[2] != 0)
+                                element.rotationZ = obj.rotation[2]
 
                             // Handle faces
                             for (let face of faces) {
@@ -181,11 +185,15 @@
                                     up: { texture: "#null", uv: [0, 0, 0, 0] },
                                     down: { texture: "#null", uv: [0, 0, 0, 0] }
                                 },
-                                children: [],
-                                rotationX: obj.rotation[0],
-                                rotationY: obj.rotation[1],
-                                rotationZ: obj.rotation[2],
+                                children: []
                             };
+
+                            if (obj.rotation[0] != 0)
+                                element.rotationX = obj.rotation[0]
+                            if (obj.rotation[1] != 0)
+                                element.rotationY = obj.rotation[1]
+                            if (obj.rotation[2] != 0)
+                                element.rotationZ = obj.rotation[2]
 
                             elements.push(element);
 
