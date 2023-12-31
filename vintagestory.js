@@ -40,7 +40,7 @@
                 bone_rig: true,
                 box_uv: false,
                 category: 'general',
-                centered_grid: true,
+                centered_grid: false,
                 display_mode: false,
                 edit_mode: true,
                 icon: 'park',
@@ -405,6 +405,8 @@
                             newAnimation.loop = "once"
                         else if (modelAni.onAnimationEnd === "Hold")
                             newAnimation.loop = "hold"
+                        newAnimation.add()
+                        Animation.selected = newAnimation
 
                         let boneAnimators = {}
 
@@ -423,25 +425,23 @@
                                     console.log("already exists")
                                 }
 
+                                var frame = modelKf.frame / 29 // is this an off-by-one error in the export?
                                 var modelBone = modelKf.elements[bonename]
+
                                 if (modelBone.offsetX != undefined) {
-                                    boneAnimator.addKeyframe({
-                                        time: modelKf.frame,
-                                        channel: "position",
-                                        data_points: [ { "x": modelBone.offsetX, "y": modelBone.offsetY, "z": modelBone.offsetZ } ]
-                                    }, guid())
+                                    var val = [modelBone.offsetX, modelBone.offsetY, modelBone.offsetZ]
+                                    console.log("position " + val)
+                                    var kf = boneAnimator.createKeyframe(val, frame, "position", false, false)
+                                    kf.data_points = val
                                 }
                                 if (modelBone.rotationX != undefined) {
-                                    boneAnimator.addKeyframe({
-                                        time: modelKf.frame,
-                                        channel: "rotation",
-                                        data_points: [ { "x": modelBone.rotationX, "y": modelBone.rotationY, "z": modelBone.rotationZ } ]
-                                    }, guid())
+                                    var val = [modelBone.rotationX, modelBone.rotationY, modelBone.rotationZ]
+                                    console.log("rotation " + val)
+                                    var kf = boneAnimator.createKeyframe(val, frame, "rotation", false, false)
+                                    kf.data_points = val
                                 }
                             })
                         }
-
-                        newAnimation.add()
                     }
 
                     function parseElement(element, group, parentPositionOrigin, new_elements, new_textures) {
