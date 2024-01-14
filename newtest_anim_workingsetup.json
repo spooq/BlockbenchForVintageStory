@@ -1,0 +1,131 @@
+{
+	"editor": {
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+		"metal": [32,32],
+		"clay": [32,32]
+	},
+	"textures": {
+	},
+	"elements": [
+		{
+			"name": "smallcubebone",
+			"from": [ 0.0, 0.0, 0.0 ],
+			"to": [ 0.0, 0.0, 0.0 ],
+			"rotationOrigin": [ 0.0, 4.0, 0.0 ],
+			"faces": {
+				"north": { "texture": "#null", "uv": [ 0.0, 0.0, 0.0, 0.0 ] },
+				"east": { "texture": "#null", "uv": [ 0.0, 0.0, 0.0, 0.0 ] },
+				"south": { "texture": "#null", "uv": [ 0.0, 0.0, 0.0, 0.0 ] },
+				"west": { "texture": "#null", "uv": [ 0.0, 0.0, 0.0, 0.0 ] },
+				"up": { "texture": "#null", "uv": [ 0.0, 0.0, 0.0, 0.0 ] },
+				"down": { "texture": "#null", "uv": [ 0.0, 0.0, 0.0, 0.0 ] }
+			},
+			"children": [
+				{
+					"name": "smallzero",
+					"from": [ 0.0, 0.0, 0.0 ],
+					"to": [ 2.0, 1.0, 1.0 ],
+					"rotationOrigin": [ 0.0, 4.0, 0.0 ],
+					"rotationX": -32.5,
+					"faces": {
+						"north": { "texture": "#clay", "uv": [ 5.0, 4.0, 7.0, 5.0 ] },
+						"east": { "texture": "#clay", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"south": { "texture": "#clay", "uv": [ 6.5, 2.5, 8.5, 3.5 ] },
+						"west": { "texture": "#clay", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"up": { "texture": "#clay", "uv": [ 0.0, 0.0, 2.0, 1.0 ] },
+						"down": { "texture": "#clay", "uv": [ 0.0, 0.0, 2.0, 1.0 ] }
+					}
+				}
+			]
+		},
+		{
+			"name": "largecubebone",
+			"from": [ 0.0, 0.0, 0.0 ],
+			"to": [ 0.0, 0.0, 0.0 ],
+			"rotationOrigin": [ 4.0, 0.0, 8.0 ],
+			"rotationY": -17.5,
+			"faces": {
+				"north": { "texture": "#null", "uv": [ 0.0, 0.0, 0.0, 0.0 ] },
+				"east": { "texture": "#null", "uv": [ 0.0, 0.0, 0.0, 0.0 ] },
+				"south": { "texture": "#null", "uv": [ 0.0, 0.0, 0.0, 0.0 ] },
+				"west": { "texture": "#null", "uv": [ 0.0, 0.0, 0.0, 0.0 ] },
+				"up": { "texture": "#null", "uv": [ 0.0, 0.0, 0.0, 0.0 ] },
+				"down": { "texture": "#null", "uv": [ 0.0, 0.0, 0.0, 0.0 ] }
+			},
+			"children": [
+				{
+					"name": "large15",
+					"from": [ 1.0, 0.0, 5.0 ],
+					"to": [ 4.0, 3.0, 8.0 ],
+					"rotationOrigin": [ 4.0, 0.0, 8.0 ],
+					"faces": {
+						"north": { "texture": "#metal", "uv": [ 0.0, 0.0, 3.0, 3.0 ] },
+						"east": { "texture": "#metal", "uv": [ 0.0, 0.0, 3.0, 3.0 ] },
+						"south": { "texture": "#metal", "uv": [ 0.0, 0.0, 3.0, 3.0 ] },
+						"west": { "texture": "#metal", "uv": [ 0.0, 0.0, 3.0, 3.0 ] },
+						"up": { "texture": "#metal", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+						"down": { "texture": "#metal", "uv": [ 0.0, 0.0, 3.0, 3.0 ] }
+					}
+				}
+			]
+		}
+	],
+	"animations": [
+		{
+			"name": "animation",
+			"code": "animation",
+			"quantityframes": 30,
+			"onActivityStopped": "EaseOut",
+			"onAnimationEnd": "Stop",
+			"keyframes": [
+				{
+					"frame": 0,
+					"elements": {
+						"largecubebone": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0 }
+					}
+				},
+				{
+					"frame": 29,
+					"elements": {
+						"largecubebone": { "offsetX": -10.0, "offsetY": 0.0, "offsetZ": 0.0 }
+					}
+				}
+			]
+		},
+
+		{
+			"name": "animation2",
+			"code": "animation2",
+			"quantityframes": 60,
+			"onActivityStopped": "EaseOut",
+			"onAnimationEnd": "Stop",
+			"keyframes": [
+				{
+					"frame": 0,
+					"elements": {
+						"smallcubebone": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0 },
+						"smallzero": { "rotationX": 0.0, "rotationY": 0.0, "rotationZ": 0.0 }
+					}
+				},
+				{
+					"frame": 29,
+					"elements": {
+						"smallzero": { "rotationX": -45.0, "rotationY": 0.0, "rotationZ": 0.0 }
+					}
+				},
+				{
+					"frame": 58,
+					"elements": {
+						"smallcubebone": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 3.0 },
+						"smallzero": { "rotationX": -45.0, "rotationY": 0.0, "rotationZ": 0.0 }
+					}
+				}
+			]
+		}
+	]
+}

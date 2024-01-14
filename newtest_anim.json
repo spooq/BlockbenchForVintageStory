@@ -9,142 +9,7 @@
 		"clay": "game:block/clay/hardened/red1",
 		"metal": "game:block/metal/plate/bismuth"
 	},
-	"elements": [
-		{
-			"name": "smallcubebone",
-			"from": [0, 0, 0],
-			"to": [0, 0, 0],
-			"rotationOrigin": [0, 4, 0],
-			"faces": {
-				"north": {
-					"texture": "#null",
-					"uv": [0, 0, 0, 0]
-				},
-				"east": {
-					"texture": "#null",
-					"uv": [0, 0, 0, 0]
-				},
-				"south": {
-					"texture": "#null",
-					"uv": [0, 0, 0, 0]
-				},
-				"west": {
-					"texture": "#null",
-					"uv": [0, 0, 0, 0]
-				},
-				"up": {
-					"texture": "#null",
-					"uv": [0, 0, 0, 0]
-				},
-				"down": {
-					"texture": "#null",
-					"uv": [0, 0, 0, 0]
-				}
-			},
-			"children": [
-				{
-					"name": "smallzero",
-					"from": [0, 0, 0],
-					"to": [1, 1, 1],
-					"rotationOrigin": [0, 4, 0],
-					"faces": {
-						"north": {
-							"texture": "#clay",
-							"uv": [5, 4, 12, 11]
-						},
-						"east": {
-							"texture": "#clay",
-							"uv": [0, 0, 1, 1]
-						},
-						"south": {
-							"texture": "#clay",
-							"uv": [6.5, 2.5, 7.5, 3.5]
-						},
-						"west": {
-							"texture": "#clay",
-							"uv": [0, 0, 1, 1]
-						},
-						"up": {
-							"texture": "#clay",
-							"uv": [0, 0, 1, 1]
-						},
-						"down": {
-							"texture": "#clay",
-							"uv": [0, 0, 1, 1]
-						}
-					},
-					"rotationX": -32.5
-				}
-			]
-		},
-		{
-			"name": "largecubebone",
-			"from": [0, 0, 0],
-			"to": [0, 0, 0],
-			"rotationOrigin": [4, 0, 8],
-			"faces": {
-				"north": {
-					"texture": "#null",
-					"uv": [0, 0, 0, 0]
-				},
-				"east": {
-					"texture": "#null",
-					"uv": [0, 0, 0, 0]
-				},
-				"south": {
-					"texture": "#null",
-					"uv": [0, 0, 0, 0]
-				},
-				"west": {
-					"texture": "#null",
-					"uv": [0, 0, 0, 0]
-				},
-				"up": {
-					"texture": "#null",
-					"uv": [0, 0, 0, 0]
-				},
-				"down": {
-					"texture": "#null",
-					"uv": [0, 0, 0, 0]
-				}
-			},
-			"children": [
-				{
-					"name": "large15",
-					"from": [1, 0, 5],
-					"to": [4, 3, 8],
-					"rotationOrigin": [4, 0, 8],
-					"faces": {
-						"north": {
-							"texture": "#metal",
-							"uv": [0, 0, 3, 3]
-						},
-						"east": {
-							"texture": "#metal",
-							"uv": [0, 0, 3, 3]
-						},
-						"south": {
-							"texture": "#metal",
-							"uv": [0, 0, 3, 3]
-						},
-						"west": {
-							"texture": "#metal",
-							"uv": [0, 0, 3, 3]
-						},
-						"up": {
-							"texture": "#metal",
-							"uv": [0, 0, 16, 16]
-						},
-						"down": {
-							"texture": "#metal",
-							"uv": [0, 0, 3, 3]
-						}
-					}
-				}
-			],
-			"rotationY": -17.5
-		}
-	],
+	"elements": [],
 	"animations": [
 		{
 			"name": "animation",
@@ -156,21 +21,23 @@
 				{
 					"frame": 0,
 					"elements": {
-						"largecubebone": {
+						"largecubebone_position": {
 							"offsetX": 0,
 							"offsetY": 0,
 							"offsetZ": 0
-						}
+						},
+						"largecubebone_rotation": {}
 					}
 				},
 				{
-					"frame": 29,
+					"frame": 30,
 					"elements": {
-						"largecubebone": {
+						"largecubebone_position": {
 							"offsetX": -10,
 							"offsetY": 0,
 							"offsetZ": 0
-						}
+						},
+						"largecubebone_rotation": {}
 					}
 				}
 			]
@@ -185,20 +52,23 @@
 				{
 					"frame": 0,
 					"elements": {
-						"smallcubebone": {
-							"rotationX": 0,
-							"rotationY": 0,
-							"rotationZ": 0,
+						"smallcubebone_position": {
 							"offsetX": 0,
 							"offsetY": 0,
 							"offsetZ": 0
+						},
+						"smallcubebone_rotation": {
+							"rotationX": 0,
+							"rotationY": 0,
+							"rotationZ": 0
 						}
 					}
 				},
 				{
-					"frame": 29,
+					"frame": 30,
 					"elements": {
-						"smallcubebone": {
+						"smallcubebone_position": {},
+						"smallcubebone_rotation": {
 							"rotationX": -45,
 							"rotationY": 0,
 							"rotationZ": 0
@@ -206,13 +76,14 @@
 					}
 				},
 				{
-					"frame": 58,
+					"frame": 60,
 					"elements": {
-						"smallcubebone": {
+						"smallcubebone_position": {
 							"offsetX": 0,
 							"offsetY": 0,
 							"offsetZ": 3
-						}
+						},
+						"smallcubebone_rotation": {}
 					}
 				}
 			]
