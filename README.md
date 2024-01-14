@@ -1,4 +1,2 @@
-# BlockbenchForVintageStory
-VintageStory json model Import/Export functionality for Blockbench
 
-Based on the plugin by Malik12tree
+This codebase has been moved to https://github.com/spooq/blockbench-plugins
